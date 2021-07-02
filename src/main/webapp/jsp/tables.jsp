@@ -1,3 +1,8 @@
+<%@page import="java.sql.Date"%>
+<%@page import="java.util.List"%>
+<%@page import="com.adsi.app.modelo.Producto"%>
+<%@page import="com.adsi.app.controlador.Controlador"%>
+<%@page contentType="text/html" pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,6 +31,59 @@
 </head>
 
 <body id="page-top">
+    
+    <% 
+               String nombre;
+               String cantidad ;
+               String valor ;
+               Integer fk_proveedor ;
+               String descripcion;
+              
+               
+                nombre = request.getParameter("nombre");
+                cantidad = request.getParameter("cantidad") ;
+                valor = request.getParameter("valor") ;
+                fk_proveedor  =  Integer.parseInt(request.getParameter("fk_proveedor")); 
+                descripcion = request.getParameter("descripcion");
+               
+                
+               
+            
+            
+           Controlador controlador = new Controlador();
+           
+           controlador.conectar();
+           
+           if (controlador.hayConexion()) {
+               
+               //Agregar un producto de pruebas
+               Producto producto = new Producto();
+               
+               
+               
+               producto.setNombre(nombre);
+               producto.setCantidad(cantidad);
+               producto.setValor(valor);
+               producto.setFk_proveedor(fk_proveedor);
+               producto.setDescripcion(descripcion);
+               
+               controlador.addProductos(producto);
+               
+               
+               
+               List<Producto> lista = controlador.findAllProductos();
+               
+               Long totalProductos = controlador.totalProductos();
+               
+
+               
+
+   
+                  
+        %>
+    
+    
+    
 
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -132,7 +190,7 @@
 
             <!-- Nav Item - Tables -->
             <li class="nav-item active">
-                <a class="nav-link" href="productosForm.html">
+                <a class="nav-link" href="tables.html">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Tables</span></a>
             </li>
@@ -272,7 +330,7 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
+                                        <img class="rounded-circle" src="../img/undraw_profile_1.svg"
                                             alt="...">
                                         <div class="status-indicator bg-success"></div>
                                     </div>
@@ -330,7 +388,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
                                 <img class="img-profile rounded-circle"
-                                    src="img/undraw_profile.svg">
+                                    src="../img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -368,61 +426,47 @@
                     <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
                         For more information about DataTables, please visit the <a target="_blank"
                             href="https://datatables.net">official DataTables documentation</a>.</p>
-                    
-                    <div>
-            <h1>FORMULARIO PARA CAPTURAR INFORMACIÓN WEB</h1>
-        </div>
 
-
-
-
-           <form action="tables.jsp"  method="POST">
-            <div class="row mb-3">
-                <div class="col-6">
-                  <input name="nombre" id="nombre" type="text" class="form-control" placeholder="Nombre de Producto" aria-label="Nombre de Producto">
-                </div>
-                   
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-2">
-                  <input name="cantidad"  type="text" class="form-control" placeholder="Cantidad" aria-label="Cantidad">
-                </div>
-                <div class="col-2 mb-3">
-                  <input name="valor"  type="text" class="form-control" placeholder="Valor" aria-label="Valor">
-                </div>
-                <div class="col-2 mb-3">
-                    <input name="fecha"  type="date" class="form-control" placeholder="fecha" aria-label="fecha">
-                </div>
-                   
-            </div>
-            
-            <div class="row mb-3">
-                <div class="col-2">
-                  <input name="fk_proveedor"  type="text" class="form-control" placeholder="ID_PROVEEDOR" aria-label="código Proveedor">
-                </div>
-                <div class="col-2 mb-3">
-                  <input name="descripcion"  type="text" class="form-control" placeholder="descripcion" aria-label="descripcion">
-                </div>
-                
-                
-                
-            </div>    
-
-            
-
-            
-
-
-            
-            <button type="submit" class="btn btn-primary btn-circle btn-lg">
-                 <i class="fas fa-check"></i>
-                
-            </button>
-        </form>        
-                            
-                            
-
+                    <!-- DataTales Example -->
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Listado de Productos</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Nombre</th>
+                                            <th>Descripci�n</th>
+                                            <th>Cantidad</th>
+                                            <th>Valor</th>
+                                           
+                                        </tr>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        
+                                             <%
+                                                for (Producto item:lista)
+                                                {
+                                              %>
+                                                                                
+                                        <tr>
+                                            <td><%=item.getNombre()%></td>
+                                            <td><%=item.getDescripcion() %> </td>
+                                            <td><%=item.getCantidad() %> </td>
+                                            <td><%=item.getValor() %> </td>
+                                           
+                                        </tr>
+                                        
+                                        <% }%>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
                 <!-- /.container-fluid -->
@@ -471,6 +515,14 @@
         </div>
     </div>
 
+         <%}else { %>
+        
+           <h1> NO ME PUDE CONECTAR</h1>
+        
+        
+        <%}%>
+    
+    
     <!-- Bootstrap core JavaScript-->
     <script src="../vendor/jquery/jquery.min.js"></script>
     <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
